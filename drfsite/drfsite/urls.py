@@ -19,6 +19,6 @@ from women.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # Свяжем маршрут с представлением
+    # Свяжем маршрут с представлением, по этому маршруту находится API представление
     path('api/v1/womenlist/', WomenAPIView.as_view()),
 ]
