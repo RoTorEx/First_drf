@@ -14,14 +14,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+
 from women.views import *
+from rest_framework import routers
+
+# Следующая реализация создаёт объект роутера. Откуда мы обращаемся. Создаим простой роутер
+router = routers.SimpleRouter()  # Из ветки роутер мы обращаемся к классу симп роутер, создаим объект класса
+router.register(r'women', WomenViewSet)  # Первым аругментом идёт префикс для набора маршрута. Вторым указываем класс
 
 urlpatterns = [
+    # path('api/v1/womenlist/', WomenViewSet.as_view({'get': 'list'})),
+    # path('api/v1/womenlist/<int:pk>/', WomenViewSet.as_view({'put': 'update'})),
+    # Весь набор маршрутов которые сгенерированы роутером и сразу их подключаем
     path('admin/', admin.site.urls),
-    # Свяжем маршрут с представлением, по этому маршруту находится API представление
-    path('api/v1/womenlist/', WomenAPIList.as_view()),
-    # Указываем ключ идентификаотр записи, которую будем менять
-    path('api/v1/womenlist/<int:pk>/', WomenAPIUpdate.as_view()),
-    path('api/v1/womendetail/<int:pk>/', WomenAPIDetailView.as_view()),
+    # Этот маршрут отвечает и за получение (get) списка статей, и за добавление (post) новой записи
+    # Если укажем ключ, например "/9/" - отобразится 9ая статья и её можно изменить (put) или удалить (delete)
+    path('api/v1/', include(router.urls)),  # http://127.0.0.1:8000/api/v1/women/
 ]
