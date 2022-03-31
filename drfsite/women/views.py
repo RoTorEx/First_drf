@@ -6,6 +6,16 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
+class WomenAPIList(generics. ListCreateAPIView):
+
+    '''Упрощённый класс представления API методов. Наследуется от базового класса ListCreateAPIView.
+    Этот класс будет как возвращать список записей, так и возвращать и их по пост запросу.'''
+
+    # Этих двух моментов достаточно чтобы получить функциональность
+    queryset = Women.objects.all()  # Ссылается на список записей возвращаемых клиенту
+    serializer_class = WomenSerializer  # Тот сериализатор, который мы будем применять к объекту
+
+
 class WomenAPIView(APIView):
 
     '''Класс сериализатор'''
