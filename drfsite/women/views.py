@@ -6,33 +6,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-# class WomenAPIView(APIView):
-
-#     '''APIView стоит во главе всех классов предствления API в рамках Django REST Framework'''
-
-#     # Этот метод обрабатывает GET запросы поступающие на сервер
-#     def get(self, request):
-#         # Формирование строки JSON
-#         # return Response({'title': 'Angelina Jolie'})
-#         # Здесь выбираем все записи из таблицы women, преобразуем их к списку и возвращаем в виде JSON-строки
-#         lst = Women.objects.all().values()
-#         return Response({'posts': list(lst)})
-
-#     # Этот метод обрабатывает POST запросы
-#     def post(self, request):
-#         post_new = Women.objects.create(
-#             title=request.data['title'],
-#             content=request.data['content'],
-#             cat_id=request.data['cat_id']
-#         )
-
-#         return Response({'post': model_to_dict(post_new)})
-
-
 class WomenAPIView(APIView):
 
-    ''''''
+    '''Класс сериализатор'''
 
+    # Метод отправки данных с базы данных клиенту
     def get(self, request):
         # ФОрмируем список объектов класса Women
         w = Women.objects.all()  # Список статей получаем как набор queryset
@@ -40,18 +18,44 @@ class WomenAPIView(APIView):
         # Response вызывает JSON render и преобразовывает данные
         return Response({'posts': WomenSerializer(w, many=True).data})
 
+    # Метод для добавления новых данных
     def post(self, request):
         serializer = WomenSerializer(data=request.data)
         # Проверка корректности принятных данных, если каких-то данных не будет хватать в запросе,
         # то будет сгенерированно исключение
         serializer.is_valid(raise_exception=True)
+        serializer.save()  # Запись в базу данных
 
-        # Если проверка прошла успешно, то добавляем данные в базу данных
-        post_new = Women.objects.create(
-            title=request.data['title'],
-            content=request.data['content'],
-            cat_id=request.data['cat_id']
-        )
+        # Возвращаем то, что было добавлено и коллекция data будет ссылаться на новый созданный объект
+        return Response({'post': serializer.data})
 
-        # Возвращаем то, что было добавлено
-        return Response({'post': WomenSerializer(post_new).data})
+    # Метод для обноваления данных в базе данных
+    def put(self, request, *args, **kwargs):
+        # Идентификатор записи, которую нужно поменять
+        pk = kwargs.get("pk", None)
+        # Если ключ pk не присутсвует то мы не можем выполнить метод put для изменения записи 
+        if not pk:
+            return Response({"error": "Method PUT not allowed"})
+
+        # Пробуем взять запись из модели Women
+        try:
+            instance = Women.objects.get(pk=pk)
+        except:
+            return Response({"error": "Object does not exists"})
+
+        # Если всё было успешно получено и пройдено, то создаём сериализатор
+        serializer = WomenSerializer(data=request.data, instance=instance)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()  # Автоматически вызовет в сериализаторе метод update
+
+        return Response({"post": serializer.data})
+
+    # Метод для удаления данных из базы данных
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method DELETE not allowed"})
+
+        # здесь код для удаления записи с переданным pk
+
+        return Response({"post": "delete post " + str(pk)})

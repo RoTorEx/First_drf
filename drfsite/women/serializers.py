@@ -6,20 +6,11 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 
 
-# class WomenModel:
-
-#     '''Объекты этого класса мы будем сериализовать, то есть преобразовывать в json строку.
-#     Этот класс будет как бы имитировать модели фреймворка Django'''
-
-#     def __init__(self, title, content):
-#         self.title = title
-#         self.content = content
-
-
 class WomenSerializer(serializers.Serializer):
 
     '''Класс-сериализатор для модели women. С помощью которого преобразуем объекты моделей в словарь,
-    а затем его в json строку с помощью json render'''
+    а затем его в json строку с помощью json render.
+    Посколько сериализаторы доджны так же обновлять, сохранять и удалять данные - создаим ещё методы'''
 
     title = serializers.CharField(max_length=255)
     content = serializers.CharField()
@@ -28,34 +19,26 @@ class WomenSerializer(serializers.Serializer):
     is_published = serializers.BooleanField(default=True)
     cat_id = serializers.IntegerField()
 
+    '''Указав в методе только параметр validate_date - это метод create.
+    Указав ещё и instance - это метод update.
+    Вот там сериализатор сам понимает какой из метод вызывать.'''
 
-# class WomenSerializer(serializers.Serializer):
+    # Метод создания новой записи
+    def create(self, validated_data):
+        # Добавялем новую запись и возвращаем её
+        return Women.objects.create(**validated_data)
 
-#     '''Наследуется от серелизатора, который работает с моделями'''
-#     class Meta:
+    # Метод обновления старой записи
+    def update(self, instance, validated_data):
 
-#         model = Women
-#         # Ниже приведены поля для серилизации, то есть те,
-#         # котрые будут отправляться обратно пользователяю
-#         fields = ('title', 'cat_id')
+        '''instance - ссылка на модель объекта women.
+        validated_data - словарь данных для изменения'''
 
-
-# # Функция кодирует данные в JSON -> заменены на класс
-# def encode():
-#     '''Прогоняем объект model через сериализитор. То коллеция data представляет собой словарь.
-#     Затем его пропускаем через json render, и получаем байтовую строку. Которую можно отдавать клиенту.
-#     То есть объект -> словарь -> json-строка.'''
-#     model = WomenModel('Angelina Jolie', 'Content: Angelina Jolie')
-#     model_sr = WomenSerializer(model)  # Здесь отрабатывает сериализатор вместо атрибутов создаёт коллецию data
-#     print(model_sr.data, type(model_sr.data), sep='\n')
-#     json = JSONRenderer().render(model_sr.data)  # Преобразует объект серилизации в байтовую JSON строку
-#     print(json, type(json), sep='\n')
-
-
-# # Функция декодирует данные из JSON -> заменены на класс
-# def decode():
-#     stream = io.BytesIO(b'{"title":"Angelina Jolie","content":"Content: Angelina Jolie"}')
-#     data = JSONParser().parse(stream)  # Передаём весь поток парсеру
-#     serializer = WomenSerializer(data=data)  # Преобразовываем, чтобы получить объект данных
-#     serializer.is_valid()  # Проверка принятых данных на корректность
-#     print(serializer.validated_data)
+        # Берём ключ из словаря, и если его нету берём через из instance
+        instance.title = validated_data.get("title", instance.title)
+        instance.content = validated_data.get("content", instance.content)
+        instance.time_update = validated_data.get("time_update", instance.time_update)
+        instance.is_published = validated_data.get("is_published", instance.is_published)
+        instance.cat_id = validated_data.get("cat_id", instance.cat_id)
+        instance.save()  # Сохраняет запись в базе данных
+        return instance  # Возвращает объект instance
