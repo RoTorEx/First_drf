@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Свяжем маршрут с представлением, по этому маршруту находится API представление
     path('api/v1/womenlist/', WomenAPIList.as_view()),
-    
     # Указываем ключ идентификаотр записи, которую будем менять
-    path('api/v1/womenlist/<int:pk>/', WomenAPIList.as_view()),
+    path('api/v1/womenlist/<int:pk>/', WomenAPIUpdate.as_view()),
+    path('api/v1/womendetail/<int:pk>/', WomenAPIDetailView.as_view()),
 ]

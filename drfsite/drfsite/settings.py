@@ -125,3 +125,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+'''Определяем коллекцию REST для защиты от вмешательство через браузер со стороны при боевом релизе.
+То есть с помощью этого словаря можно конфигурировать DRF для любых задач, чтобы он работал в нужном для нас режиме.'''
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',  # Можем опредилить по умолчанию класс рендера. Подключен API браузера.
+        # Закоментив строку ниже пропадает браузерное API. И браузер будет использовать толко GET запрос.
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+}
