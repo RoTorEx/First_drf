@@ -33,33 +33,3 @@ urlpatterns = [
     path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]
-
-
-# class MyCustomRouter(routers.SimpleRouter):
-
-#     '''Нащ кастомный класс-роутер'''
-
-#     routes = [
-#         routers.Route(url=r'^{prefix}$',  # Шаблон маршрута, адреса определны без обратного слеша
-#                       mapping={'get': 'list'},  # Связывает тип запроса с соответствующим методов ViewSet'а
-#                       name='{basename}-list',  # Название маршрута
-#                       detail=False,  # Список или запись
-#                       # Доп. аругменты передаётся конкретному определнию при срабатывании маршрута
-#                       initkwargs={'suffix': 'List'}),
-#         routers.Route(url=r'^{prefix}/{lookup}$',
-#                       mapping={'get': 'retrieve'},
-#                       name='{basename}-detail',
-#                       detail=True,
-#                       initkwargs={'suffix': 'Detail'})
-#     ]
-
-
-# # Следующая реализация создаёт объект роутера. Откуда мы обращаемся. Создаим простой роутер
-# '''У такого метода не существует этого маршрута: http://127.0.0.1:8000/api/v1/'''
-# # router = routers.SimpleRouter()  # Из ветки роутер мы обращаемся к классу симп роутер, создаим объект класса
-# '''А у такого метода такой маршрут: http://127.0.0.1:8000/api/v1/ существует'''
-# # router = routers.DefaultRouter()
-# router = MyCustomRouter()  # Свой роутер
-# # Первым аругментом идёт префикс для набора маршрута. Вторым указываем класс
-# router.register(r'women', WomenViewSet, basename='men')  # Можем задать свой префикс имени маршрута
-# # print(router.urls)

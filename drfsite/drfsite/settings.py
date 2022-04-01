@@ -134,6 +134,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 То есть с помощью этого словаря можно конфигурировать DRF для любых задач, чтобы он работал в нужном для нас режиме.'''
 
 REST_FRAMEWORK = {
+    # Определяет класс по умолчанию для пагианции, и кол-во записей на странице
+    # Это глобальные насйтроки для всех API
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 2,
+
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',  # Можем опредилить по умолчанию класс рендера. Подключен API браузера.
         # Закоментив строку ниже пропадает браузерное API. И браузер будет использовать толко GET запрос.
