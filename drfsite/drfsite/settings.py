@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'women.apps.WomenConfig',  # Наше приложение women
     'rest_framework',  # Установленный DRF
+    'rest_framework.authtoken',
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -143,5 +145,13 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.IsAuthenticated',
         # Но на глобально уровне настройки прописаны вот так (доступ для всех):
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # Разрешение аутентификации по токенам
+        'rest_framework.authentication.TokenAuthentication',
+        # Разрешение аутентификации по сессиям (2 строки)
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
 }
