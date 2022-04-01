@@ -135,5 +135,13 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',  # Можем опредилить по умолчанию класс рендера. Подключен API браузера.
         # Закоментив строку ниже пропадает браузерное API. И браузер будет использовать толко GET запрос.
         'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        # При указании IsAuthenticated, то доступ к данным будет предоаставлен только авторизованным пользователям
+        # но в этом случае надо закомментить permission_classes в WomenAPIList
+        # 'rest_framework.permissions.IsAuthenticated',
+        # Но на глобально уровне настройки прописаны вот так (доступ для всех):
+        'rest_framework.permissions.AllowAny',
     ]
 }
