@@ -25,6 +25,7 @@ urlpatterns = [
     path('api/v1/women/', WomenAPIList.as_view()),  # Получение списка статей
     path('api/v1/women/<int:pk>/', WomenAPIUpdate.as_view()),  # Изменение записи
     path('api/v1/womendelete/<int:pk>/', WomenAPIDestroy.as_view()),  # Удаление записи
+    path('api/v1/drf-auth/', include('rest_framework.urls'))
 ]
 
 
@@ -56,4 +57,3 @@ urlpatterns = [
 # # Первым аругментом идёт префикс для набора маршрута. Вторым указываем класс
 # router.register(r'women', WomenViewSet, basename='men')  # Можем задать свой префикс имени маршрута
 # # print(router.urls)
-
