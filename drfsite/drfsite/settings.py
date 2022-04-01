@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -149,9 +150,50 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # Разрешение аутентификации по токенам
-        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        # Аутентификация через JWT (json web token)
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         # Разрешение аутентификации по сессиям (2 строки)
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
+}
+
+# Настройки JWT
+SIMPLE_JWT = {
+    # Определяют интервал времени активности выданного access_token и интервал времени обновления refresh_token.
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # access_token - 5 min
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # refresh_token - 1 day
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'UPDATE_LAST_LOGIN': False,
+
+    # Указывают алгоритм шифрования для формирования подписи (HS256) и используемый для этого секретный ключ.
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    # Определяют заголовок перед токеном в заголовке запроса, поле, в котором будет передаваться токен,
+    # и что в JWT-токене будет сохраняться информация об идентификаторе пользователя в виде ключа user_id.
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    # Эти строчки говорят, что идентификатор пользователя определяется таким ключом
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+    # Настраивают параметры для слайдинг токенов
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }

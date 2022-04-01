@@ -30,7 +30,8 @@ class WomenAPIUpdate(generics.RetrieveUpdateAPIView):
     # Строчки ниже в этом представлении будут предоставлять доступ только тем пользователям,
     # которые получают доступ по токенам, и по сессия ничего не получится получить
     authentication_classes = (TokenAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    # Закомментим эту строчку, чтобы всё работало по JWT
+    # permission_classes = (IsAuthenticated, )
 
 
 class WomenAPIDestroy(generics.RetrieveDestroyAPIView):

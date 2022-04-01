@@ -28,7 +28,7 @@ class Women(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, db_index=True)  # Определяет что за категория женщины
+    name = models.CharField(max_length=100, db_index=True)  # Определяет что это за категория женщины
 
     def __str__(self):
         return self.name
